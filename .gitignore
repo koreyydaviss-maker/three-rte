@@ -1,0 +1,6 @@
+.env
+.venv/
+__pycache__/
+clips/queue/*.mp4
+clips/played/*.mp4
+clips/next_prompt.txt

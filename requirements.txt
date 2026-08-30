@@ -1,0 +1,4 @@
+python-dotenv>=1.0
+requests>=2.31
+fal-client>=0.4 ; python_version >= "3.9"
+replicate>=0.25
