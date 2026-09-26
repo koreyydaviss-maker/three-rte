@@ -214,7 +214,7 @@
    "stopped": false,
    "peak": 960,
    "value": 960.0,
-   "updated": "2026-09-26"
+   "updated": "2026-09-26-test"
   },
   {
    "trader": "CPHequities",
@@ -321,7 +321,7 @@
    "stopped": false,
    "peak": 750.0000000000003,
    "value": 750.0,
-   "updated": "2026-09-26"
+   "updated": "2026-09-26-test"
   }
  ]
 }
