@@ -9,3 +9,4 @@ Edit this list to add or remove traders.
 | @CPHequities (Christian Kongsted) | eToro | Watch | No return/drawdown data found yet |
 | @jaynemesis (Jay Smith) | eToro | Avoid | -54% DD 2018–2020, -40% DD from Nov 2021 |
 | ReversionTrader | AlphaLedger (Earnex LLC) | Avoid | Only ~7 months verified; unregulated broker; equity 7.5% below balance |
+| @JeppeKirkBonde (Jeppe Kirk Bonde) | eToro | Watch only (added 2026-09-26) | 2026 YTD ~+20% (unverified), risk score 5; max drawdown unknown |
