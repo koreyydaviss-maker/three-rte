@@ -1,0 +1,241 @@
+<title>Copy-Trade Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#F2F4F7;--surface:#FFFFFF;--ink:#16202A;--muted:#5B6B7A;--line:#DCE2E8;--soft:#E9EDF2;
+  --accent:#1F5FAD;--green:#1E7F52;--amber:#A86A12;--red:#B8352F;
+  --green-bg:#E3F3EA;--amber-bg:#FBF0DC;--red-bg:#FBE5E3;--accent-bg:#E4EDF8;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--bg:#0D1319;--surface:#141C24;--ink:#E3E9EF;--muted:#91A1B1;--line:#26323E;--soft:#1B252F;
+  --accent:#6EA6F5;--green:#4CC38A;--amber:#E0A546;--red:#F07470;
+  --green-bg:#15301F;--amber-bg:#35270F;--red-bg:#3A1A19;--accent-bg:#172A42;}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--bg:#0D1319;--surface:#141C24;--ink:#E3E9EF;--muted:#91A1B1;--line:#26323E;--soft:#1B252F;
+  --accent:#6EA6F5;--green:#4CC38A;--amber:#E0A546;--red:#F07470;
+  --green-bg:#15301F;--amber-bg:#35270F;--red-bg:#3A1A19;--accent-bg:#172A42;}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans);padding-inline:16px;padding-block:24px 48px}
+.wrap{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{margin:0;text-wrap:balance}
+h1{font-size:28px;font-weight:700;letter-spacing:-.01em}
+h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+h3{font-size:18px;font-weight:600}
+.num,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:1px solid var(--line);padding-bottom:16px}
+header p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.sources{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);background:var(--surface);white-space:nowrap}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.dot.ok{background:var(--green)}.dot.part{background:var(--amber)}.dot.no{background:var(--red)}
+section{display:flex;flex-direction:column;gap:12px}
+.changes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.changes li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.tag{font:600 11px/1 var(--sans);text-transform:uppercase;letter-spacing:.06em;padding:5px 7px;border-radius:4px;white-space:nowrap}
+.t-up{background:var(--green-bg);color:var(--green)}.t-down{background:var(--red-bg);color:var(--red)}.t-warn{background:var(--amber-bg);color:var(--amber)}.t-same{background:var(--soft);color:var(--muted)}
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;border-top:3px solid var(--muted)}
+.card.test{border-top-color:var(--green)}.card.watch{border-top-color:var(--amber)}.card.avoid{border-top-color:var(--red)}
+a.card:hover{border-color:var(--accent)}
+a.card:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.card .handle{font-weight:600}
+.card .big{font:500 24px/1.1 var(--mono)}
+.pill{align-self:flex-start;font:600 12px/1 var(--sans);padding:5px 8px;border-radius:999px}
+.p-test{background:var(--green-bg);color:var(--green)}.p-watch{background:var(--amber-bg);color:var(--amber)}.p-avoid{background:var(--red-bg);color:var(--red)}
+.kv{display:grid;grid-template-columns:1fr auto;gap:2px 10px;font-size:13px}
+.kv dt{color:var(--muted)}.kv dd{margin:0;font-family:var(--mono);text-align:right}
+.pos{color:var(--green)}.neg{color:var(--red)}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+tbody tr:last-child td{border-bottom:0}
+td.heat{font-family:var(--mono)}
+.detail{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:16px;scroll-margin-top:16px}
+.dhead{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
+.stat .l{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.stat .v{font:500 18px/1.3 var(--mono)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+.bars{display:flex;flex-direction:column;gap:5px}
+.bar{display:grid;grid-template-columns:72px 1fr 58px 64px;gap:8px;align-items:center;font-size:13px}
+.bar .track{height:10px;background:var(--soft);border-radius:2px;overflow:hidden}
+.bar .fill{height:100%;background:var(--accent);border-radius:2px}
+.bar .fill.dd{background:var(--red);opacity:.85}
+.bar .fill.shared{background:var(--amber)}
+.ddbar{grid-template-columns:110px 1fr 64px}
+.flags{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.flags li{display:grid;grid-template-columns:10px 1fr;gap:10px;align-items:baseline}
+.flags .dot{transform:translateY(-1px)}
+.note{font-size:14px;background:var(--soft);border-radius:6px;padding:10px 12px}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:10px;height:10px;border-radius:2px;display:inline-block}
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.calc label{font-weight:600;font-size:14px}
+.calc .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.calc input{font:500 18px var(--mono);width:140px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+.alloc{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.alloc > div{border:1px solid var(--line);border-radius:8px;padding:12px}
+.alloc .amt{font:500 22px var(--mono)}
+.log{list-style:none;margin:0;padding:0;border-left:2px solid var(--line);display:flex;flex-direction:column;gap:14px}
+.log li{position:relative;padding-left:18px;font-size:14px}
+.log li::before{content:"";position:absolute;left:-6px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid var(--accent)}
+.log .time{font-family:var(--mono);font-size:12px;color:var(--muted)}
+footer{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Copy-Trade Desk</h1>
+      <p>Watchlist status as of <span class="mono">Sat 26 Sep 2026</span>. Holdings as of today; drawdowns and trades from the Aug 31 factsheets.</p>
+    </div>
+    <div class="sources" aria-label="Data sources">
+      <span class="chip"><span class="dot ok"></span>Bullaware: live</span>
+      <span class="chip"><span class="dot part"></span>AlphaLedger: loads, no strategy data</span>
+      <span class="chip"><span class="dot no"></span>eToro: blocks bots (Cloudflare)</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>What changed today</h2>
+    <ul class="changes">
+      <li><span class="tag t-down">Red flag</span><span><b>@thomaspj</b> is in the worst drawdown of his record: -19.48%, open for 10 months. His previous worst was -16.11%. He cut 57 losing chip and industrial trades in August. Stays Watch only.</span></li>
+      <li><span class="tag t-up">Upgrade</span><span><b>@CPHequities</b> → Small test allocation. +20.66% YTD, risk score 4, max drawdown -33.08%, 9.6-year record.</span></li>
+      <li><span class="tag t-up">Upgrade</span><span><b>@JeppeKirkBonde</b> → Small test allocation. +20.64% YTD, risk score 5, max drawdown -26.15%, 13.3-year record.</span></li>
+      <li><span class="tag t-warn">Overlap</span><span>All three non-Avoid traders hold <b>Micron (MU)</b>. Copying more than one stacks your chip exposure.</span></li>
+      <li><span class="tag t-same">No change</span><span><b>@jaynemesis</b> and <b>ReversionTrader</b> stay Avoid. Jay's max drawdown is now confirmed at -54.51%.</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Verdict board</h2>
+    <div class="board" id="board"></div>
+  </section>
+
+  <section>
+    <h2>Size a test copy</h2>
+    <div class="calc">
+      <div class="row">
+        <label for="loss">Most I could lose on each copy without it hurting</label>
+        <input id="loss" type="number" min="0" step="50" value="500" inputmode="decimal">
+      </div>
+      <div class="alloc" id="alloc"></div>
+      <p class="muted" style="margin:0;font-size:13px">Allocation = your loss limit ÷ (2 × the trader's historical max drawdown). eToro's minimum copy is $200. Set a copy stop-loss at your loss limit.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Shared holdings</h2>
+    <div class="scroll"><table id="overlap"></table></div>
+  </section>
+
+  <section id="details">
+    <h2>Trader detail</h2>
+  </section>
+
+  <section>
+    <h2>Activity log</h2>
+    <ul class="log">
+      <li><div class="time">19:05 UTC</div>Added the copy-trade-vetter skill and the trader watchlist.</li>
+      <li><div class="time">19:17 UTC</div>First watch report. @thomaspj downgraded from Best candidate to Watch only.</li>
+      <li><div class="time">19:19 UTC</div>Verify run. Added @JeppeKirkBonde as a candidate. All data sites were blocked, so figures came from search snippets.</li>
+      <li><div class="time">19:23 UTC</div>Positions snapshot agent ran. Every data site was blocked, so the results were thin and undated.</li>
+      <li><div class="time">After 19:25 UTC</div>You widened network access. Bullaware opened; eToro still refuses bots.</li>
+      <li><div class="time">Now</div>Live run: real holdings, drawdowns and August trades pulled from Bullaware. Two upgrades, one red flag. Report saved as <span class="mono">copytrade/reports/2026-09-26-live.md</span>.</li>
+      <li><div class="time">Next</div>The weekday morning routine re-runs the watch, if it's been set up (not yet confirmed).</li>
+    </ul>
+  </section>
+
+  <footer>Education, not financial advice. No trades are placed by this setup; you place any copy yourself on eToro. Data from <a href="https://bullaware.com" style="color:var(--accent)">Bullaware</a> is indicative.</footer>
+</div>
+
+<script>
+const DATA = {"traders": [{"id": "JeppeKirkBonde", "name": "Jeppe Kirk Bonde", "verdict": "test", "vtext": "Small test allocation", "change": "up", "ytd": 20.64, "mo": 1.5, "y2": 68.67, "y5": 110.96, "ann": 26.57, "risk": 5, "copiers": "25,456", "years": 13.3, "maxdd": -26.15, "ddnote": "Nov 2021 \u2013 Feb 2024 \u00b7 27 mo", "holds": 66, "dd": [[-26.15, "Nov 21\u2013Feb 24"], [-20.63, "Jan 14\u2013Nov 15"], [-20.09, "Oct 18\u2013Jun 19"], [-18.33, "Feb 20\u2013Jul 20"], [-9.52, "Mar 26\u2013May 26"]], "flags": [["amber", "Chip-heavy: MU 9.7%, TSM 9.4%, NVDA 5.6%. MU is +722% since his entry."], ["green", "13.3-year record, no leverage, buy-and-hold (avg hold 968 days), so it copies cleanly."]], "aug": "Took profits: GOOGL, AAPL (+178%), MU (+249%), ABBN (+106%).", "pos": [{"s": "MU", "w": 9.7, "pl": 722.5, "d": 1}, {"s": "TSM", "w": 9.37, "pl": 263.4, "d": 1}, {"s": "NVDA", "w": 5.58, "pl": 250.5, "d": 1}, {"s": "FCX", "w": 3.72, "pl": 83.0, "d": 1}, {"s": "B", "w": 3.46, "pl": 132.9, "d": 1}, {"s": "ASML.NV", "w": 2.86, "pl": 133.3, "d": 1}, {"s": "EQT", "w": 2.83, "pl": 35.2, "d": 1}, {"s": "SKHY", "w": 2.78, "pl": 13.8, "d": 1}, {"s": "ABBN.ZU", "w": 2.67, "pl": 100.9, "d": 1}, {"s": "META", "w": 2.56, "pl": 170.9, "d": 1}, {"s": "VST", "w": 2.55, "pl": -5.2, "d": 1}, {"s": "GS", "w": 2.49, "pl": 156.8, "d": 1}], "all": {"MU": 9.7, "TSM": 9.37, "NVDA": 5.58, "FCX": 3.72, "B": 3.46, "ASML.NV": 2.86, "EQT": 2.83, "SKHY": 2.78, "ABBN.ZU": 2.67, "META": 2.56, "VST": 2.55, "GS": 2.49, "CEG": 2.3, "MSFT": 2.06, "HST": 2.02, "UBSG.ZU": 2.02, "SPY5.L": 2.02, "VRTX": 2.0, "ASML": 1.83, "RRC": 1.78, "BE": 1.68, "BOL.ST": 1.51, "PLTR": 1.48, "NBIS.RTH": 1.45, "SMSN.L": 1.37, "NBIX": 1.37, "JPM": 1.34, "AMZN": 1.3, "FSLR": 1.19, "INDA": 1.19, "RHM.DE": 1.08, "RIOT": 1.06, "D": 1.05, "NKT.CO": 1.03, "ANTO.L": 1.03, "CNC": 0.82, "EMAAR.AE": 0.81, "CDI.PA": 0.79, "AVAV": 0.74, "LDOS": 0.72, "DIS.RTH": 0.7, "HO.PA": 0.66, "AMZN.RTH": 0.63, "FORTUM.HE": 0.61, "PGNY": 0.56, "NOC": 0.51, "NHY.OL": 0.51, "LMT": 0.5, "AGRO": 0.48, "NOVO-B.CO": 0.44, "GAW.L": 0.42, "ORK.OL": 0.37, "VALE": 0.36, "1810.HK": 0.35, "HAS": 0.35, "SNDK.RTH": 0.34, "META.RTH": 0.34, "DEWA.AE": 0.34, "EMAARDEV.AE": 0.31, "RL.RTH": 0.28, "RL": 0.27, "TSM.RTH": 0.2, "MC.PA": 0.2, "ETOR": 0.17, "VST.RTH": 0.14, "NVTKL.L": 0.0}}, {"id": "CPHequities", "name": "Christian Kongsted", "verdict": "test", "vtext": "Small test allocation", "change": "up", "ytd": 20.66, "mo": 2.66, "y2": 47.64, "y5": 63.78, "ann": 21.04, "risk": 4, "copiers": "16,087", "years": 9.6, "maxdd": -33.08, "ddnote": "Nov 2021 \u2013 Mar 2024 \u00b7 28 mo", "holds": 30, "dd": [[-33.08, "Nov 21\u2013Mar 24"], [-11.2, "May 19\u2013Jan 20"], [-10.22, "Feb 25\u2013May 25"], [-6.57, "Mar 26\u2013Apr 26"], [-5.86, "Jul 26\u2013now"]], "flags": [["amber", "His worst drawdown (-33%) took 28 months to recover. Plan for -66%."], ["green", "Diversified across healthcare, energy, finance and chips. Risk score 4."]], "aug": "Took profits: AGX (~+182%), CAT (~+36%), EZPW, TD. Small loss on NJR.", "pos": [{"s": "MU", "w": 6.38, "pl": 186.9, "d": 1}, {"s": "JNJ", "w": 5.0, "pl": 7.8, "d": 1}, {"s": "XOM", "w": 4.8, "pl": 2.6, "d": 1}, {"s": "MRK", "w": 4.77, "pl": 15.5, "d": 1}, {"s": "MCK", "w": 4.71, "pl": -3.7, "d": 1}, {"s": "PANW", "w": 4.67, "pl": 10.3, "d": 1}, {"s": "TSM", "w": 4.61, "pl": 169.6, "d": 1}, {"s": "INTC", "w": 4.6, "pl": 33.5, "d": 1}, {"s": "LRCX", "w": 4.49, "pl": 32.0, "d": 1}, {"s": "REP.MC", "w": 4.05, "pl": 4.3, "d": 1}, {"s": "INGA.NV", "w": 4.03, "pl": 20.9, "d": 1}, {"s": "TRV", "w": 3.91, "pl": -0.8, "d": 1}], "all": {"MU": 6.38, "JNJ": 5.0, "XOM": 4.8, "MRK": 4.77, "MCK": 4.71, "PANW": 4.67, "TSM": 4.61, "INTC": 4.6, "LRCX": 4.49, "REP.MC": 4.05, "INGA.NV": 4.03, "TRV": 3.91, "WDEF.L": 3.83, "WELL.US": 3.82, "8001.T": 3.68, "CABK.MC": 3.36, "NKT.CO": 3.34, "GOOG": 2.9, "LLY": 2.81, "NESTE.HE": 2.74, "AHR": 2.23, "ARGX": 2.18, "CRDO": 2.09, "LITE": 2.0, "AMD": 1.98, "AMZN": 1.83, "MSFT": 1.54, "AAPL": 1.52, "CLS": 1.09, "STRL.US": 1.03}}, {"id": "thomaspj", "name": "Thomas Parry Jones", "verdict": "watch", "vtext": "Watch only", "change": "down", "ytd": -12.08, "mo": 4.29, "y2": 35.95, "y5": 165.01, "ann": 28.5, "risk": 5, "copiers": "26,123", "years": 6.8, "maxdd": -19.48, "ddnote": "Nov 2025 \u2013 still open \u00b7 10 mo", "holds": 12, "dd": [[-19.48, "Nov 25\u2013now"], [-16.11, "Apr 22\u2013Oct 22"], [-13.32, "Sep 20\u2013Dec 20"], [-7.86, "Mar 25\u2013May 25"], [-5.43, "Nov 21\u2013Mar 22"]], "flags": [["red", "Currently in his worst drawdown on record, still open after 10 months."], ["amber", "Cut 57 losing trades in August: INTC ~-26%, KLAC ~-22%, CAT ~-17%."], ["amber", "Only 12 holdings, about 72% in tech."]], "aug": "Cut losers: INTC \u00d715, KLAC \u00d718, CAT \u00d718, GE. Small gains on C \u00d737, GS \u00d725.", "pos": [{"s": "AMD", "w": 12.19, "pl": 17.3, "d": 1}, {"s": "PLTR", "w": 11.05, "pl": 6.6, "d": 1}, {"s": "MU", "w": 10.85, "pl": 8.7, "d": 1}, {"s": "MSFT", "w": 10.66, "pl": 3.5, "d": 1}, {"s": "NVDA", "w": 10.65, "pl": 7.3, "d": 1}, {"s": "AMZN", "w": 10.06, "pl": -2.7, "d": 1}, {"s": "RR.L", "w": 8.6, "pl": 1.7, "d": 1}, {"s": "INGA.NV", "w": 6.93, "pl": -1.4, "d": 1}, {"s": "JPM", "w": 5.98, "pl": 7.1, "d": 1}, {"s": "BAC", "w": 5.71, "pl": 1.4, "d": 1}, {"s": "GOOG", "w": 4.97, "pl": -1.8, "d": 1}, {"s": "META", "w": 2.36, "pl": -0.0, "d": 1}], "all": {"AMD": 12.19, "PLTR": 11.05, "MU": 10.85, "MSFT": 10.66, "NVDA": 10.65, "AMZN": 10.06, "RR.L": 8.6, "INGA.NV": 6.93, "JPM": 5.98, "BAC": 5.71, "GOOG": 4.97, "META": 2.36}}, {"id": "jaynemesis", "name": "Jay Smith", "verdict": "avoid", "vtext": "Avoid", "change": "same", "ytd": 6.84, "mo": -0.08, "y2": 20.92, "y5": 18.41, "ann": 24.92, "risk": 4, "copiers": "8,498", "years": 12.8, "maxdd": -54.51, "ddnote": "Jan 2018 \u2013 Aug 2020 \u00b7 31 mo", "holds": 43, "dd": [[-54.51, "Jan 18\u2013Aug 20"], [-39.69, "Nov 21\u2013Sep 25"], [-15.09, "Mar 14\u2013Jun 14"], [-13.71, "Nov 25\u2013May 26"], [-13.62, "Jan 16\u2013Feb 16"]], "flags": [["red", "-54.5% max drawdown. The 2\u00d7 rule means planning for -109%, so it can't be sized."], ["amber", "5-year return only +18.4%."]], "aug": "Took profits: ABBN, NVDA, GOOG, SPOT, ETN. Cut TAN (-16.5%).", "pos": [{"s": "GOOG", "w": 7.96, "pl": 5.2, "d": 1}, {"s": "PRY.MI", "w": 6.75, "pl": 39.3, "d": 1}, {"s": "NVDA", "w": 5.77, "pl": 41.0, "d": 1}, {"s": "ABBN.ZU", "w": 5.6, "pl": 29.4, "d": 1}, {"s": "FCX", "w": 3.28, "pl": 4.7, "d": 1}, {"s": "AMD", "w": 3.21, "pl": 53.7, "d": 1}, {"s": "CRWD", "w": 3.21, "pl": 74.8, "d": 1}, {"s": "NTR", "w": 3.1, "pl": -1.1, "d": 1}, {"s": "ANTO.L", "w": 3.01, "pl": -4.1, "d": 1}, {"s": "XYL", "w": 2.85, "pl": -9.2, "d": 1}, {"s": "ETN", "w": 2.67, "pl": 18.1, "d": 1}, {"s": "IBE.MC", "w": 2.53, "pl": 27.9, "d": 1}], "all": {"GOOG": 7.96, "PRY.MI": 6.75, "NVDA": 5.77, "ABBN.ZU": 5.6, "FCX": 3.28, "AMD": 3.21, "CRWD": 3.21, "NTR": 3.1, "ANTO.L": 3.01, "XYL": 2.85, "ETN": 2.67, "IBE.MC": 2.53, "SU.PA": 2.51, "LLY": 2.46, "SMSN.L": 2.44, "VRSK": 2.41, "AMZN": 2.4, "ARM": 2.34, "ASML.NV": 2.12, "NKT.CO": 2.1, "SGOV": 2.09, "MSFT": 1.97, "IOT": 1.82, "6367.T": 1.75, "NIBEB.ST": 1.71, "6501.T": 1.71, "SNDK": 1.67, "COST": 1.62, "SKHY": 1.58, "TT": 1.38, "WEAT": 1.38, "SPOT": 1.32, "TSM": 1.28, "NEE": 1.19, "TRMB": 1.13, "WAB": 1.03, "IAU": 1.03, "VIE.PA": 0.98, "WHEAT.FUT": 0.95, "COCOA.FUT": 0.93, "GAW.L": 0.93, "TTWO": 0.8, "FORTUM.HE": 0.52}}], "rev": {"name": "ReversionTrader", "plat": "AlphaLedger (Earnex LLC)", "vtext": "Avoid", "note": "Only ~7 months verified, unregulated broker, equity 7.5% below balance. No new data: the strategy page only renders in a browser."}};
+const T = DATA.traders;
+const pct = (v, d=2) => (v>0?'+':'') + v.toFixed(d) + '%';
+const cls = v => v>=0 ? 'pos' : 'neg';
+const vcls = {test:'test', watch:'watch', avoid:'avoid'};
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// Verdict board
+const board = document.getElementById('board');
+board.innerHTML = T.map(t => `
+  <a class="card ${vcls[t.verdict]}" href="#${t.id}">
+    <span class="handle">@${t.id}</span>
+    <span class="pill p-${t.verdict}">${t.vtext}${t.change==='up'?' ▲':t.change==='down'?' ▼':''}</span>
+    <span class="big ${cls(t.ytd)}">${pct(t.ytd)}</span>
+    <dl class="kv"><dt>YTD</dt><dd></dd><dt>Max drawdown</dt><dd class="neg">${pct(t.maxdd)}</dd><dt>Risk score</dt><dd>${t.risk}/10</dd><dt>Record</dt><dd>${t.years} yrs</dd></dl>
+  </a>`).join('') + `
+  <div class="card avoid">
+    <span class="handle">${esc(DATA.rev.name)}</span>
+    <span class="pill p-avoid">Avoid</span>
+    <span class="big muted">n/a</span>
+    <p class="muted" style="margin:0;font-size:13px">${esc(DATA.rev.plat)}. ${esc(DATA.rev.note)}</p>
+  </div>`;
+board.querySelectorAll('.kv').forEach(k => { k.firstElementChild.remove(); k.firstElementChild.remove(); });
+
+// Sizing calculator
+const cand = T.filter(t => t.verdict === 'test');
+const alloc = document.getElementById('alloc'), loss = document.getElementById('loss');
+function renderAlloc(){
+  const L = Math.max(0, parseFloat(loss.value) || 0);
+  alloc.innerHTML = cand.map(t => {
+    const plan = 2 * Math.abs(t.maxdd) / 100, a = L / plan;
+    const under = a > 0 && a < 200;
+    return `<div><div class="muted" style="font-size:13px">@${t.id} · plan for ${(plan*100).toFixed(0)}% drawdown</div>
+      <div class="amt">$${Math.round(a).toLocaleString()}</div>
+      <div style="font-size:13px" class="${under?'neg':'muted'}">${under?'Below eToro\'s $200 minimum':'Stop-loss at −$'+Math.round(L).toLocaleString()}</div></div>`;
+  }).join('') + `<div><div class="muted" style="font-size:13px">@thomaspj, @jaynemesis</div><div class="amt muted">$0</div><div style="font-size:13px" class="muted">Not cleared for money</div></div>`;
+}
+loss.addEventListener('input', renderAlloc); renderAlloc();
+
+// Overlap
+const live = T.filter(t => t.verdict !== 'avoid');
+const jay = T.find(t => t.id === 'jaynemesis');
+const map = {};
+T.forEach(t => Object.entries(t.all).forEach(([s,w]) => { (map[s] ||= {})[t.id] = w; }));
+const rows = Object.entries(map).filter(([s,v]) => live.filter(t => v[t.id]).length >= 2)
+  .sort((a,b) => live.reduce((n,t)=>n+(b[1][t.id]||0),0) - live.reduce((n,t)=>n+(a[1][t.id]||0),0));
+const shared = new Set(rows.map(r => r[0]));
+const maxW = 13;
+const cell = w => w ? `<td class="heat" style="background:color-mix(in srgb, var(--amber) ${Math.round(w/maxW*45)}%, transparent)">${w.toFixed(1)}%</td>` : '<td class="muted">–</td>';
+document.getElementById('overlap').innerHTML =
+  `<thead><tr><th>Ticker</th>${live.map(t=>`<th>@${t.id}</th>`).join('')}<th>Combined</th><th>@jaynemesis (Avoid)</th></tr></thead><tbody>` +
+  rows.map(([s,v]) => `<tr><td class="mono"><b>${s}</b></td>${live.map(t=>cell(v[t.id])).join('')}<td class="mono">${live.reduce((n,t)=>n+(v[t.id]||0),0).toFixed(1)}%</td><td class="mono muted">${v.jaynemesis? v.jaynemesis.toFixed(1)+'%':'–'}</td></tr>`).join('') +
+  '</tbody>';
+
+// Details
+const det = document.getElementById('details');
+T.forEach(t => {
+  const top = Math.max(...t.pos.map(p=>p.w));
+  const el = document.createElement('article');
+  el.className = 'detail'; el.id = t.id;
+  el.innerHTML = `
+    <div class="dhead"><h3>@${t.id}</h3><span class="muted">${esc(t.name)} · eToro</span><span class="pill p-${t.verdict}">${t.vtext}</span></div>
+    <div class="stats">
+      ${[['YTD',pct(t.ytd),cls(t.ytd)],['This month',pct(t.mo),cls(t.mo)],['2 years',pct(t.y2),cls(t.y2)],['5 years',pct(t.y5),cls(t.y5)],['Annualized',pct(t.ann),''],['Max drawdown',pct(t.maxdd),'neg'],['Risk score',t.risk+'/10',''],['Copiers',t.copiers,''],['Holdings',t.holds,'']]
+        .map(([l,v,c])=>`<div class="stat"><div class="l">${l}</div><div class="v ${c}">${v}</div></div>`).join('')}
+    </div>
+    <ul class="flags">${t.flags.map(([c,s])=>`<li><span class="dot ${c==='green'?'ok':c==='amber'?'part':'no'}"></span><span>${esc(s)}</span></li>`).join('')}</ul>
+    <div class="cols">
+      <div class="bars">
+        <div class="legend"><span><i class="sw" style="background:var(--accent)"></i>Top 12 holdings, % of portfolio</span><span><i class="sw" style="background:var(--amber)"></i>Also held by another trader</span></div>
+        ${t.pos.map(p=>`<div class="bar"><span class="mono">${p.s}</span><span class="track"><span class="fill ${shared.has(p.s)&&t.verdict!=='avoid'?'shared':''}" style="width:${(p.w/top*100).toFixed(1)}%;display:block"></span></span><span class="mono" style="text-align:right">${p.w.toFixed(1)}%</span><span class="mono ${cls(p.pl)}" style="text-align:right;font-size:12px" title="Open profit/loss on the position">${pct(p.pl,1)}</span></div>`).join('')}
+      </div>
+      <div class="bars">
+        <div class="legend"><span><i class="sw" style="background:var(--red)"></i>Five worst drawdowns (depth, period)</span></div>
+        ${t.dd.map(([v,l])=>`<div class="bar ddbar"><span class="mono" style="font-size:12px">${l}</span><span class="track"><span class="fill dd" style="width:${(Math.abs(v)/55*100).toFixed(1)}%;display:block"></span></span><span class="mono neg" style="text-align:right">${v.toFixed(2)}%</span></div>`).join('')}
+        <div class="note"><b>August trades.</b> ${esc(t.aug)}</div>
+      </div>
+    </div>`;
+  det.appendChild(el);
+});
+</script>

@@ -5,8 +5,8 @@ Edit this list to add or remove traders.
 
 | Trader | Platform | Current verdict | Notes |
 |---|---|---|---|
-| @thomaspj (Thomas Parry Jones) | eToro | Watch only (downgraded 2026-09-26) | 2026 YTD -12.87%, risk score 5; strong record before 2026 |
-| @CPHequities (Christian Kongsted) | eToro | Watch | No return/drawdown data found yet |
-| @jaynemesis (Jay Smith) | eToro | Avoid | -54% DD 2018–2020, -40% DD from Nov 2021 |
+| @JeppeKirkBonde (Jeppe Kirk Bonde) | eToro | **Small test allocation** (upgraded 2026-09-26) | YTD +20.64%, risk 5, max drawdown -26.15%, 13.3 years; heavy in chips (MU/TSM/NVDA) |
+| @CPHequities (Christian Kongsted) | eToro | **Small test allocation** (upgraded 2026-09-26) | YTD +20.66%, risk 4, max drawdown -33.08%, 9.6 years, 30 holdings |
+| @thomaspj (Thomas Parry Jones) | eToro | Watch only | Worst-ever drawdown -19.48%, still open (since Nov 2025); YTD -12.08%; risk 5 |
+| @jaynemesis (Jay Smith) | eToro | Avoid | Max drawdown -54.51% (2018–20), -39.69% (2021–25) |
 | ReversionTrader | AlphaLedger (Earnex LLC) | Avoid | Only ~7 months verified; unregulated broker; equity 7.5% below balance |
-| @JeppeKirkBonde (Jeppe Kirk Bonde) | eToro | Watch only (added 2026-09-26) | 2026 YTD ~+20% (unverified), risk score 5; max drawdown unknown |
