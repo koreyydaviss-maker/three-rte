@@ -1,0 +1,44 @@
+{
+ "updated": "2026-09-26-test",
+ "copies": [
+  {
+   "trader": "JeppeKirkBonde",
+   "amount": 960,
+   "stop_loss": 500,
+   "start_date": "2026-09-26",
+   "value": 960.0,
+   "stopped": false,
+   "holdings": 66,
+   "history": [
+    [
+     "2026-09-26",
+     960.0
+    ],
+    [
+     "2026-09-26-test",
+     960.0
+    ]
+   ]
+  },
+  {
+   "trader": "CPHequities",
+   "amount": 750,
+   "stop_loss": 500,
+   "start_date": "2026-09-26",
+   "value": 750.0,
+   "stopped": false,
+   "holdings": 30,
+   "history": [
+    [
+     "2026-09-26",
+     750.0
+    ],
+    [
+     "2026-09-26-test",
+     750.0
+    ]
+   ]
+  }
+ ],
+ "trades_today": []
+}

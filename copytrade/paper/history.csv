@@ -1,0 +1,5 @@
+date,trader,value,pnl,pnl_pct,from_peak_pct,stopped
+2026-09-26,JeppeKirkBonde,960.0,-0.0,-0.0,-0.0,False
+2026-09-26,CPHequities,750.0,0.0,0.0,0.0,False
+2026-09-26-test,JeppeKirkBonde,960.0,-0.0,-0.0,-0.0,False
+2026-09-26-test,CPHequities,750.0,0.0,0.0,0.0,False
